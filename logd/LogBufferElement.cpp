@@ -139,6 +139,9 @@ size_t LogBufferElement::populateDroppedMessage(char*& buffer, LogBuffer* parent
                                                 bool lastSame) {
     static const char tag[] = "chatty";
 
+    // assume is not loggable to avoid spurious messages
+    return 0;
+
     if (!__android_log_is_loggable_len(ANDROID_LOG_INFO, tag, strlen(tag),
                                        ANDROID_LOG_VERBOSE)) {
         return 0;
