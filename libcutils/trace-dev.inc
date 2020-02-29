@@ -48,13 +48,15 @@ uint64_t                atrace_enabled_tags  = ATRACE_TAG_NOT_READY;
 static bool             atrace_is_debuggable = false;
 static atomic_bool      atrace_is_enabled    = ATOMIC_VAR_INIT(true);
 static pthread_mutex_t  atrace_tags_mutex    = PTHREAD_MUTEX_INITIALIZER;
+static bool             dummy = false;
 
 // Set whether this process is debuggable, which determines whether
 // application-level tracing is allowed when the ro.debuggable system property
 // is not set to '1'.
 void atrace_set_debuggable(bool debuggable)
 {
-    atrace_is_debuggable = debuggable;
+    dummy = debuggable;
+    atrace_is_debuggable = false;   //debuggable;
     atrace_update_tags();
 }
 
@@ -81,7 +83,7 @@ static bool atrace_is_cmdline_match(const char* cmdline)
 // Determine whether application-level tracing is enabled for this process.
 static bool atrace_is_app_tracing_enabled()
 {
-    bool sys_debuggable = __android_log_is_debuggable();
+    bool sys_debuggable = false;  //__android_log_is_debuggable();
     bool result = false;
 
     if (sys_debuggable || atrace_is_debuggable) {
