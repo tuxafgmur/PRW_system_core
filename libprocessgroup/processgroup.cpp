@@ -124,19 +124,20 @@ static void RemoveUidProcessGroups(const std::string& uid_path) {
             }
 
             auto path = StringPrintf("%s/%s", uid_path.c_str(), dir->d_name);
-            LOG(VERBOSE) << "Removing " << path;
-            if (rmdir(path.c_str()) == -1) PLOG(WARNING) << "Failed to remove " << path;
+            //LOG(VERBOSE) << "Removing " << path;
+            //if (rmdir(path.c_str()) == -1) PLOG(WARNING) << "Failed to remove " << path;
+            rmdir(path.c_str());
         }
     }
 }
 
 void removeAllProcessGroups()
 {
-    LOG(VERBOSE) << "removeAllProcessGroups()";
+    //LOG(VERBOSE) << "removeAllProcessGroups()";
     const auto& cgroup_root_path = GetCgroupRootPath();
     std::unique_ptr<DIR, decltype(&closedir)> root(opendir(cgroup_root_path.c_str()), closedir);
     if (root == NULL) {
-        PLOG(ERROR) << "Failed to open " << cgroup_root_path;
+        //PLOG(ERROR) << "Failed to open " << cgroup_root_path;
     } else {
         dirent* dir;
         while ((dir = readdir(root.get())) != nullptr) {
@@ -150,8 +151,9 @@ void removeAllProcessGroups()
 
             auto path = StringPrintf("%s/%s", cgroup_root_path.c_str(), dir->d_name);
             RemoveUidProcessGroups(path);
-            LOG(VERBOSE) << "Removing " << path;
-            if (rmdir(path.c_str()) == -1) PLOG(WARNING) << "Failed to remove " << path;
+            //LOG(VERBOSE) << "Removing " << path;
+            //if (rmdir(path.c_str()) == -1) PLOG(WARNING) << "Failed to remove " << path;
+            rmdir(path.c_str());
         }
     }
 }
@@ -163,7 +165,7 @@ static int DoKillProcessGroupOnce(uid_t uid, int initialPid, int signal) {
     auto path = ConvertUidPidToPath(uid, initialPid) + PROCESSGROUP_CGROUP_PROCS_FILE;
     std::unique_ptr<FILE, decltype(&fclose)> fd(fopen(path.c_str(), "re"), fclose);
     if (!fd) {
-        PLOG(WARNING) << "Failed to open process cgroup uid " << uid << " pid " << initialPid;
+        //PLOG(WARNING) << "Failed to open process cgroup uid " << uid << " pid " << initialPid;
         return -1;
     }
 
@@ -204,11 +206,11 @@ static int DoKillProcessGroupOnce(uid_t uid, int initialPid, int signal) {
 
     // Kill all process groups.
     for (const auto pgid : pgids) {
-        LOG(VERBOSE) << "Killing process group " << -pgid << " in uid " << uid
-                     << " as part of process cgroup " << initialPid;
+        //LOG(VERBOSE) << "Killing process group " << -pgid << " in uid " << uid
+        //             << " as part of process cgroup " << initialPid;
 
         if (kill(-pgid, signal) == -1) {
-            PLOG(WARNING) << "kill(" << -pgid << ", " << signal << ") failed";
+            //PLOG(WARNING) << "kill(" << -pgid << ", " << signal << ") failed";
         }
     }
 
@@ -218,7 +220,7 @@ static int DoKillProcessGroupOnce(uid_t uid, int initialPid, int signal) {
                      << initialPid;
 
         if (kill(pid, signal) == -1) {
-            PLOG(WARNING) << "kill(" << pid << ", " << signal << ") failed";
+            //PLOG(WARNING) << "kill(" << pid << ", " << signal << ") failed";
         }
     }
 
@@ -226,12 +228,11 @@ static int DoKillProcessGroupOnce(uid_t uid, int initialPid, int signal) {
 }
 
 static int KillProcessGroup(uid_t uid, int initialPid, int signal, int retries) {
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
     int retry = retries;
     int processes;
     while ((processes = DoKillProcessGroupOnce(uid, initialPid, signal)) > 0) {
-        LOG(VERBOSE) << "Killed " << processes << " processes for processgroup " << initialPid;
+        //LOG(VERBOSE) << "Killed " << processes << " processes for processgroup " << initialPid;
         if (retry > 0) {
             std::this_thread::sleep_for(5ms);
             --retry;
@@ -241,32 +242,19 @@ static int KillProcessGroup(uid_t uid, int initialPid, int signal, int retries) 
     }
 
     if (processes < 0) {
-        PLOG(ERROR) << "Error encountered killing process cgroup uid " << uid << " pid "
-                    << initialPid;
+        //PLOG(ERROR) << "Error encountered killing process cgroup uid " << uid << " pid "
+        //            << initialPid;
         return -1;
     }
-
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
     // We only calculate the number of 'processes' when killing the processes.
     // In the retries == 0 case, we only kill the processes once and therefore
     // will not have waited then recalculated how many processes are remaining
     // after the first signals have been sent.
-    // Logging anything regarding the number of 'processes' here does not make sense.
 
     if (processes == 0) {
-        if (retries > 0) {
-            LOG(INFO) << "Successfully killed process cgroup uid " << uid << " pid " << initialPid
-                      << " in " << static_cast<int>(ms) << "ms";
-        }
         return RemoveProcessGroup(uid, initialPid);
     } else {
-        if (retries > 0) {
-            LOG(ERROR) << "Failed to kill process cgroup uid " << uid << " pid " << initialPid
-                       << " in " << static_cast<int>(ms) << "ms, " << processes
-                       << " processes remain";
-        }
         return -1;
     }
 }
@@ -323,7 +311,7 @@ int createProcessGroup(uid_t uid, int initialPid)
 
 static bool SetProcessGroupValue(uid_t uid, int pid, const std::string& file_name, int64_t value) {
     if (GetCgroupRootPath() != MEM_CGROUP_PATH) {
-        PLOG(ERROR) << "Memcg is not mounted.";
+        //PLOG(ERROR) << "Memcg is not mounted.";
         return false;
     }
 
