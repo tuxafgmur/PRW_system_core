@@ -2,6 +2,7 @@ LOCAL_PATH:= $(call my-dir)
 
 #######################################
 # init.rc
+ifneq ($(DEVICE_HAS_INITRC),true)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := init.rc
@@ -10,7 +11,7 @@ LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 
 include $(BUILD_PREBUILT)
-
+endif
 #######################################
 # init-debug.rc
 include $(CLEAR_VARS)
