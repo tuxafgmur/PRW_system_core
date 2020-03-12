@@ -187,7 +187,7 @@ void property_changed(const std::string& name, const std::string& value) {
 
     if (waiting_for_prop) {
         if (wait_prop_name == name && wait_prop_value == value) {
-            LOG(INFO) << "Wait for property took " << *waiting_for_prop;
+            //LOG(INFO) << "Wait for property took " << *waiting_for_prop;
             ResetWaitForProp();
         }
     }
@@ -302,7 +302,7 @@ void HandleControlMessage(const std::string& msg, const std::string& name, pid_t
             return;
         }
 
-        LOG(ERROR) << "Could not find service hosting interface " << name;
+        //LOG(ERROR) << "Could not find service hosting interface " << name;
         return;
     }
 
@@ -611,7 +611,7 @@ int main(int argc, char** argv) {
         // talk to the outside world...
         InitKernelLogging(argv);
 
-        LOG(INFO) << "init first stage started!";
+        //LOG(INFO) << "init first stage started!";
 
         if (!DoFirstStageMount()) {
             LOG(FATAL) << "Failed to mount required partitions early ...";
@@ -649,7 +649,7 @@ int main(int argc, char** argv) {
 
     // At this point we're in the second stage of init.
     InitKernelLogging(argv);
-    LOG(INFO) << "init second stage started!";
+    //LOG(INFO) << "init second stage started!";
 
     // Set up a session keyring that all processes will have access to. It
     // will hold things like FBE encryption keys. No process should override

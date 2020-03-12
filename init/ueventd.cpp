@@ -212,7 +212,7 @@ void ColdBoot::Run() {
     WaitForSubProcesses();
 
     close(open(COLDBOOT_DONE, O_WRONLY | O_CREAT | O_CLOEXEC, 0000));
-    LOG(INFO) << "Coldboot took " << cold_boot_timer.duration().count() / 1000.0f << " seconds";
+    //LOG(INFO) << "Coldboot took " << cold_boot_timer.duration().count() / 1000.0f << " seconds";
 }
 
 int ueventd_main(int argc, char** argv) {

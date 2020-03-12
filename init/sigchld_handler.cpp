@@ -47,7 +47,7 @@ static bool ReapOneProcess() {
     // This returns a zombie pid or informs us that there are no zombies left to be reaped.
     // It does NOT reap the pid; that is done below.
     if (TEMP_FAILURE_RETRY(waitid(P_ALL, 0, &siginfo, WEXITED | WNOHANG | WNOWAIT)) != 0) {
-        PLOG(ERROR) << "waitid failed";
+        //PLOG(ERROR) << "waitid failed";
         return false;
     }
 

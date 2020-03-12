@@ -61,7 +61,7 @@ static bool IsBooting() {
 static void ProcessFirmwareEvent(const Uevent& uevent) {
     int booting = IsBooting();
 
-    LOG(INFO) << "firmware: loading '" << uevent.firmware << "' for '" << uevent.path << "'";
+    //LOG(INFO) << "firmware: loading '" << uevent.firmware << "' for '" << uevent.path << "'";
 
     std::string root = "/sys" + uevent.path;
     std::string loading = root + "/loading";
@@ -98,7 +98,7 @@ try_loading_again:
         goto try_loading_again;
     }
 
-    LOG(ERROR) << "firmware: could not find firmware for " << uevent.firmware;
+    //LOG(ERROR) << "firmware: could not find firmware for " << uevent.firmware;
 
     // Write "-1" as our response to the kernel's firmware request, since we have nothing for it.
     write(loading_fd, "-1", 2);
@@ -113,9 +113,9 @@ void HandleFirmwareEvent(const Uevent& uevent) {
         PLOG(ERROR) << "could not fork to process firmware event for " << uevent.firmware;
     }
     if (pid == 0) {
-        Timer t;
+        //Timer t;
         ProcessFirmwareEvent(uevent);
-        LOG(INFO) << "loading " << uevent.path << " took " << t;
+        //LOG(INFO) << "loading " << uevent.path << " took " << t;
         _exit(EXIT_SUCCESS);
     }
 }

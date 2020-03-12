@@ -115,11 +115,11 @@ void Parser::ParseData(const std::string& filename, const std::string& data, siz
 }
 
 bool Parser::ParseConfigFile(const std::string& path, size_t* parse_errors) {
-    LOG(INFO) << "Parsing file " << path << "...";
+    //LOG(INFO) << "Parsing file " << path << "...";
     android::base::Timer t;
     auto config_contents = ReadFile(path);
     if (!config_contents) {
-        LOG(ERROR) << "Unable to read config file '" << path << "': " << config_contents.error();
+        //LOG(ERROR) << "Unable to read config file '" << path << "': " << config_contents.error();
         return false;
     }
 

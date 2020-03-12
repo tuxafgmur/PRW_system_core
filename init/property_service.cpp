@@ -521,13 +521,13 @@ static void handle_property_set_fd() {
 
         const auto& cr = socket.cred();
         std::string error;
-        uint32_t result =
+//        uint32_t result =
             HandlePropertySet(prop_name, prop_value, socket.source_context(), cr, &error);
-        if (result != PROP_SUCCESS) {
-            LOG(ERROR) << "Unable to set property '" << prop_name << "' to '" << prop_value
-                       << "' from uid:" << cr.uid << " gid:" << cr.gid << " pid:" << cr.pid << ": "
-                       << error;
-        }
+//         if (result != PROP_SUCCESS) {
+//             LOG(ERROR) << "Unable to set property '" << prop_name << "' to '" << prop_value
+//                        << "' from uid:" << cr.uid << " gid:" << cr.gid << " pid:" << cr.pid << ": "
+//                        << error;
+//         }
 
         break;
       }
@@ -545,11 +545,11 @@ static void handle_property_set_fd() {
         const auto& cr = socket.cred();
         std::string error;
         uint32_t result = HandlePropertySet(name, value, socket.source_context(), cr, &error);
-        if (result != PROP_SUCCESS) {
-            LOG(ERROR) << "Unable to set property '" << name << "' to '" << value
-                       << "' from uid:" << cr.uid << " gid:" << cr.gid << " pid:" << cr.pid << ": "
-                       << error;
-        }
+//         if (result != PROP_SUCCESS) {
+//             LOG(ERROR) << "Unable to set property '" << name << "' to '" << value
+//                        << "' from uid:" << cr.uid << " gid:" << cr.gid << " pid:" << cr.pid << ": "
+//                        << error;
+//         }
         socket.SendUint32(result);
         break;
       }
@@ -637,10 +637,10 @@ static void LoadProperties(char* data, const char* filter, const char* filename)
             ucred cr = {.pid = 1, .uid = 0, .gid = 0};
             std::string error;
             result = HandlePropertySet(key, value, context, cr, &error);
-            if (result != PROP_SUCCESS) {
-                LOG(ERROR) << "Unable to set property '" << key << "' to '" << value
-                           << "' in property file '" << filename << "': " << error;
-            }
+//             if (result != PROP_SUCCESS) {
+//                 LOG(ERROR) << "Unable to set property '" << key << "' to '" << value
+//                            << "' in property file '" << filename << "': " << error;
+//             }
         }
     }
 }

@@ -479,7 +479,7 @@ bool FirstStageMountVBootV2::InitAvbHandle() {
 bool DoFirstStageMount() {
     // Skips first stage mount if we're in recovery mode.
     if (IsRecoveryMode()) {
-        LOG(INFO) << "First stage mount skipped (recovery mode)";
+        //LOG(INFO) << "First stage mount skipped (recovery mode)";
         return true;
     }
 
@@ -499,12 +499,12 @@ bool DoFirstStageMount() {
 
 void SetInitAvbVersionInRecovery() {
     if (!IsRecoveryMode()) {
-        LOG(INFO) << "Skipped setting INIT_AVB_VERSION (not in recovery mode)";
+        //LOG(INFO) << "Skipped setting INIT_AVB_VERSION (not in recovery mode)";
         return;
     }
 
     if (!IsDtVbmetaCompatible()) {
-        LOG(INFO) << "Skipped setting INIT_AVB_VERSION (not vbmeta compatible)";
+        //LOG(INFO) << "Skipped setting INIT_AVB_VERSION (not vbmeta compatible)";
         return;
     }
 

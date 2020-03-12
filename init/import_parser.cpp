@@ -46,8 +46,8 @@ void ImportParser::EndFile() {
     imports_.clear();
     for (const auto& [import, line_num] : current_imports) {
         if (!parser_->ParseConfig(import)) {
-            PLOG(ERROR) << filename_ << ": " << line_num << ": Could not import file '" << import
-                        << "'";
+            //PLOG(ERROR) << filename_ << ": " << line_num << ": Could not import file '" << import
+            //            << "'";
         }
     }
 }
